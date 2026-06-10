@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Customer Analytics Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-chart-line logo-icon"></i>
+                    <span>AuraAnalytics</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#overview" class="menu-item active" id="btn-overview">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <span>Executive Overview</span>
+                </a>
+                <a href="#segmentation" class="menu-item" id="btn-segmentation">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                    <span>RFM Segmentation</span>
+                </a>
+                <a href="#clv-churn" class="menu-item" id="btn-clv-churn">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>CLV & Churn Risk</span>
+                </a>
+                <a href="#products" class="menu-item" id="btn-products">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span>Product Insights</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot"></span>
+                    <span class="status-text">System Live</span>
+                </div>
+                <div class="last-updated" id="last-updated-time">Updating...</div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="welcome-section">
+                    <h1>Customer Analytics Portal</h1>
+                    <p class="subtitle">E-commerce Customer Lifetime Value & Retention Intelligence</p>
+                </div>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span id="current-date-badge">June 2026</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- SECTION 1: OVERVIEW -->
+            <section id="overview-section" class="dashboard-section active">
+                <!-- KPI Grid -->
+                <div class="kpi-grid">
+                    <div class="kpi-card" id="kpi-revenue">
+                        <div class="kpi-icon-wrapper rev-icon">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Total Net Revenue</span>
+                            <h2 class="kpi-value" id="val-revenue">$0.00</h2>
+                            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +14.2% MoM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card" id="kpi-customers">
+                        <div class="kpi-icon-wrapper cust-icon">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Active Customers</span>
+                            <h2 class="kpi-value" id="val-customers">0</h2>
+                            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +8.5% MoM</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card" id="kpi-aov">
+                        <div class="kpi-icon-wrapper aov-icon">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Avg. Order Value (AOV)</span>
+                            <h2 class="kpi-value" id="val-aov">$0.00</h2>
+                            <span class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +3.1% MoM</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card" id="kpi-churn">
+                        <div class="kpi-icon-wrapper churn-icon">
+                            <i class="fa-solid fa-user-slash"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Overall Churn Risk</span>
+                            <h2 class="kpi-value" id="val-churn">0.0%</h2>
+                            <span class="kpi-trend negative"><i class="fa-solid fa-circle-exclamation"></i> Action Required</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card" id="kpi-clv">
+                        <div class="kpi-icon-wrapper clv-icon">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+                        <div class="kpi-info">
+                            <span class="kpi-label">Avg. Expected CLV</span>
+                            <h2 class="kpi-value" id="val-clv">$0.00</h2>
+                            <span class="kpi-trend positive"><i class="fa-solid fa-chart-line"></i> 12-Month Horizon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main charts layout -->
+                <div class="grid-2col">
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <h3>Revenue & Orders Historical Trend</h3>
+                            <p class="panel-desc">Monthly financial performance & purchase cycles</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <h3>Customer Geography Distribution</h3>
+                            <p class="panel-desc">Top 8 countries by total revenue contribution</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="countryRevenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: RFM SEGMENTATION -->
+            <section id="segmentation-section" class="dashboard-section">
+                <div class="grid-segmentation">
+                    <div class="chart-panel segment-pie-panel">
+                        <div class="panel-header">
+                            <h3>RFM Segment Breakdown</h3>
+                            <p class="panel-desc">Customer share based on Recency, Frequency, & Monetary scores</p>
+                        </div>
+                        <div class="chart-container-donut">
+                            <canvas id="segmentDonutChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-panel segment-table-panel">
+                        <div class="panel-header">
+                            <h3>Segment Profiles</h3>
+                            <p class="panel-desc">Comparative behavioral metrics across RFM clusters</p>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="table-segments">
+                                <thead>
+                                    <tr>
+                                        <th>Segment</th>
+                                        <th>Customers</th>
+                                        <th>% Share</th>
+                                        <th>Avg. Spend</th>
+                                        <th>Avg. Recency</th>
+                                        <th>Avg. Freq</th>
+                                        <th>Avg. CLV</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-segments">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Strategy Playbook Card -->
+                <div class="playbook-card mt-4">
+                    <div class="playbook-header">
+                        <div class="playbook-badge"><i class="fa-solid fa-bullseye"></i> Targeted Strategy Playbook</div>
+                        <div class="select-wrapper">
+                            <label for="playbook-segment-selector">Choose Segment:</label>
+                            <select id="playbook-segment-selector" class="custom-select">
+                                <!-- Dynamic options -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="playbook-content">
+                        <div class="playbook-meta">
+                            <h3 id="playbook-segment-name">Champions</h3>
+                            <div class="meta-indicators">
+                                <span class="badge" id="playbook-size">0 Customers</span>
+                                <span class="badge" id="playbook-risk">Low Risk (0.0% Avg Churn)</span>
+                            </div>
+                        </div>
+                        <hr class="panel-divider">
+                        <div class="playbook-grid">
+                            <div class="playbook-column">
+                                <h4><i class="fa-solid fa-circle-info text-primary"></i> Segment Characterization</h4>
+                                <p id="playbook-desc">Best customers who buy frequently, spend heavily, and purchased recently.</p>
+                            </div>
+                            <div class="playbook-column">
+                                <h4><i class="fa-solid fa-wand-magic-sparkles text-success"></i> Recommended Marketing Actions</h4>
+                                <ul id="playbook-actions">
+                                    <li>Reward with loyalty points and exclusive early access.</li>
+                                    <li>Upsell premium and high-margin product categories.</li>
+                                    <li>Engage in referral programs and ask for reviews.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: CLV & CHURN RISK -->
+            <section id="clv-churn-section" class="dashboard-section">
+                <div class="grid-2col">
+                    <!-- High-Value Churn Alerts Table -->
+                    <div class="chart-panel">
+                        <div class="panel-header warning-border">
+                            <div class="header-flex">
+                                <div>
+                                    <h3>VIP Churn Alert Center</h3>
+                                    <p class="panel-desc">Top high-value customers at immediate risk of churning (Churn Prob > 50%)</p>
+                                </div>
+                                <span class="alert-count-pill" id="churn-alert-count">0 Alerts</span>
+                            </div>
+                        </div>
+                        <div class="table-wrapper text-small">
+                            <table class="data-table" id="table-churn-alerts">
+                                <thead>
+                                    <tr>
+                                        <th>Cust ID</th>
+                                        <th>RFM Segment</th>
+                                        <th>Days Inactive</th>
+                                        <th>Hist. Spend</th>
+                                        <th>Churn Risk</th>
+                                        <th>Est. CLV</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-churn-alerts">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Risk Analysis Summary Card -->
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <h3>Churn Risk and Value Quadrant</h3>
+                            <p class="panel-desc">Retention marketing matrix for customer value optimization</p>
+                        </div>
+                        <div class="risk-matrix-wrapper">
+                            <div class="matrix-card high-value-low-risk">
+                                <div class="card-icon"><i class="fa-solid fa-gem text-emerald"></i></div>
+                                <h4>High Value / Low Risk</h4>
+                                <p class="matrix-stat" id="stat-hvlr">0 customers</p>
+                                <span class="matrix-action">Action: Loyalty Rewards</span>
+                            </div>
+                            <div class="matrix-card high-value-high-risk">
+                                <div class="card-icon"><i class="fa-solid fa-triangle-exclamation text-rose"></i></div>
+                                <h4>High Value / High Risk</h4>
+                                <p class="matrix-stat" id="stat-hvhr">0 customers</p>
+                                <span class="matrix-action">Action: Dedicated Outreach</span>
+                            </div>
+                            <div class="matrix-card low-value-low-risk">
+                                <div class="card-icon"><i class="fa-solid fa-user-check text-cyan"></i></div>
+                                <h4>Low Value / Low Risk</h4>
+                                <p class="matrix-stat" id="stat-lvlr">0 customers</p>
+                                <span class="matrix-action">Action: Nurture & Grow</span>
+                            </div>
+                            <div class="matrix-card low-value-high-risk">
+                                <div class="card-icon"><i class="fa-solid fa-ghost text-slate"></i></div>
+                                <h4>Low Value / High Risk</h4>
+                                <p class="matrix-stat" id="stat-lvhr">0 customers</p>
+                                <span class="matrix-action">Action: Reactive Campaigns</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: PRODUCT INSIGHTS -->
+            <section id="products-section" class="dashboard-section">
+                <div class="grid-2col">
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <h3>Top 10 Products by Sales Revenue</h3>
+                            <p class="panel-desc">Primary revenue contributors based on net transaction totals</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="productRevenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <h3>Product Leaderboard Detail</h3>
+                            <p class="panel-desc">Sales metrics for top performing items</p>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table" id="table-products">
+                                <thead>
+                                    <tr>
+                                        <th>Stock Code</th>
+                                        <th>Description</th>
+                                        <th>Total Revenue</th>
+                                        <th>Units Sold</th>
+                                        <th>Avg Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-products">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check toast-icon"></i>
+        <span id="toast-message">Success!</span>
+    </div>
+
+    <!-- Load Analytics Data -->
+    <script src="data.js"></script>
+    <!-- Custom Application JS -->
+    <script src="app.js"></script>
+</body>
+</html>
